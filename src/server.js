@@ -1,15 +1,15 @@
 import express from "express";
-import { mapOrder } from "./utilities/sorts.js";
+import { env } from "./config/environtment.js";
+import { connectDB } from "./config/mongodb.js";
 
 const app = express();
 
-const hostname = "localhost";
-const port = 8088;
+connectDB().catch(console.log);
 
 app.get("/", (req, res) => {
   res.end("<h1>Hello word !</h1>");
 });
 
-app.listen(port, hostname, () => {
-  console.log(`Hello haipham, I'm running at ${hostname}:${port}/`);
+app.listen(env.PORT, env.HOST, () => {
+  console.log(`Hello haipham, I'm running at ${env.HOST}:${env.PORT}/`);
 });
