@@ -5,7 +5,7 @@ import { getDB } from "../config/mongodb.js";
 // Define Board collection
 const boardCollectionName = "boards";
 const boardCollectionSchema = Joi.object({
-  title: Joi.string().required().min(3).max(20),
+  title: Joi.string().required().min(3).max(20).trim(),
   columnOrder: Joi.array().items(Joi.string()).default([]),
   createdAt: Joi.date().timestamp().default(Date.now()),
   updatedAt: Joi.date().timestamp().default(null),
@@ -33,6 +33,28 @@ const createNew = async (data) => {
     const result = await getDB()
       .collection(boardCollectionName)
       .insertOne(value);
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+const update = async (id, data) => {
+  try {
+    const updateData = { ...data };
+    const result = await getDB()
+      .collection(boardCollectionName)
+      .insertOneAndUpdate(
+        {
+          _id: ObjectId(id),
+        },
+        {
+          $set: data,
+        },
+        {
+          returnDocument: "after",
+        }
+      );
     return result;
   } catch (error) {
     throw new Error(error);
